@@ -38,15 +38,21 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                {% if game_data.status == "setup" %}
+                                    <th style="width: 5%;">&nbsp;</th>
+                                {% endif %}
                                 <th>Player</th>
                                 <th>Score</th>
                             </tr>
                         </thead>
-                        <tbody>
-                        {% for player_name, player_score in player_scores.items %}
+                        <tbody class="align-middle">
+                        {% for player_name, player_data in player_scores.items %}
                             <tr>
+                                {% if game_data.status == "setup" %}
+                                    <td><button class="btn btn-danger btn-sm remove-player-button" data-bs-toggle="modal" data-bs-target="#remove-player-modal" data-player-id="{{player_data.player_id}}" data-player-name="{{player_name}}">Remove</button></td>
+                                {% endif %}
                                 <td>{{player_name}}</td>
-                                <td>{{player_score}}</td>
+                                <td>{{player_data.score}}</td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -202,6 +208,24 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" id="toggle-league-game-status-button">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="remove-player-modal" tabindex="-1" aria-labelledby="example-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="example-modal-label">Are you sure?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to remove this player?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger">Remove</button>
             </div>
         </div>
     </div>
@@ -372,7 +396,7 @@
         }
     });
 
-    document.getElementById("hole-jump").addEventListener("change", (event) => {
+    document.getElementById("hole-jump")?.addEventListener("change", (event) => {
         const newHole = event.target.value;
         window.location.href = baseHoleUrl + newHole;
     });
